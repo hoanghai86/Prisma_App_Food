@@ -1,0 +1,9 @@
+
+Invalid `model.user.update()` invocation in
+C:\Users\haiho-tckt\Desktop\NodeJs\Prisma_App_Food\index.js:61:26
+
+  58 let { user_id } = req.params;
+  59 let { full_name, email, pass_word } = req.body;
+  60 let data = { full_name, email, pass_word }
+→ 61 await model.user.update(
+An operation failed because it depends on one or more records that were required but not found. Record to update not found.
