@@ -39,6 +39,21 @@ app.get("/getUser/:user_id", async (req, res) => {
     }
 })
 
+//JOIN
+app.get("/joinLikeRes", async (req, res) => {
+    try {
+        let data = await model.like_res.findMany({
+            include: {
+                restaurant: true,
+                user: true
+            }
+        });
+        res.send(data);
+    } catch (error) {
+        res.send(error);
+    }
+})
+
 //GET BY FULL_NAME
 app.get("/getUser", async (req, res) => {
     try {
@@ -79,3 +94,32 @@ app.put("/updateUser/:user_id", async (req, res) => {
     }
 })
 
+//yarn add multer => thư viện để lấy hình từ FE lưu xuống BE
+const multer = require("multer")
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        //nơi định nghĩa đường dẫn lưu hình
+        cb(null, process.cwd() + "/public/img")
+    },
+    //đổi tên file đang được úp lên
+    filename: (req, file, cb) => {
+        const newFileName = Date.now() + "=" + file.originalname //20230310-hinh.xxx
+        cb(null, newFileName)
+    }
+})
+
+const upload = multer({ storage })
+app.post("/upload", upload.single("data"), (req, res) => {
+    const file = req.file;
+    fs.readFile(process.cwd() + "/public/img/" + file.filename, (err, data) => {
+        //băm base64
+        let fileName = `data:${file.mimetype};base64,${Buffer.from(data.toString('base64'))}`
+        //khi có chuỗi băm hình thì xóa hình trong thư mục img
+        fs.unlinkSync(process.cwd() + "/public/img/" + file.filename)
+        // res.send(fileName);
+        res.send({ message: "Upload thành công!", fileName })
+
+    })
+    // res.send({ message: "Upload thành công!", file })
+})
