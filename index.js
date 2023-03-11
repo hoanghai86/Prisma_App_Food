@@ -104,7 +104,7 @@ const storage = multer.diskStorage({
     },
     //đổi tên file đang được úp lên
     filename: (req, file, cb) => {
-        const newFileName = Date.now() + "=" + file.originalname //20230310-hinh.xxx
+        const newFileName = Date.now() + "-" + file.originalname //20230310-hinh.xxx
         cb(null, newFileName)
     }
 })
